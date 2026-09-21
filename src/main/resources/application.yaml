@@ -1,0 +1,9 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.reza.SerializationKt.configureSerialization
+      - com.reza.SecurityKt.configureSecurity
+      - com.reza.ResourcesKt.configureResources
+      - com.reza.RoutingKt.configureRouting
