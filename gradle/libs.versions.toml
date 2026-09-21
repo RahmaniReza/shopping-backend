@@ -1,9 +1,23 @@
 [versions]
 kotlin = "2.4.0"
 logback = "1.5.37"
+exposed = "0.53.0"
+postgresql = "42.7.2"
+hikaricp = "5.1.0"
+jbcrypt = "0.4"
 
 [libraries]
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+# Database & ORM
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+
+# Security
+jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
