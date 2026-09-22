@@ -32,11 +32,16 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.java.time)
     implementation(libs.postgresql)
     implementation(libs.hikaricp)
 
     // Security
     implementation(libs.jbcrypt)
+
+    // Dependency Injection
+    implementation(libs.koin.ktor)
+    implementation(libs.koin.logger)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
