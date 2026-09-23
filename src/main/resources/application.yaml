@@ -3,7 +3,8 @@ ktor:
     port: 8080
   application:
     modules:
-      - com.reza.SerializationKt.configureSerialization
-      - com.reza.SecurityKt.configureSecurity
-      - com.reza.ResourcesKt.configureResources
-      - com.reza.RoutingKt.configureRouting
+        - com.reza.plugins.SerializationKt.configureSerialization
+        - com.reza.plugins.DependencyInjectionKt.configureDependencyInjection
+        - com.reza.plugins.DatabaseKt.configureDatabase
+        - com.reza.plugins.SecurityKt.configureSecurity
+        - com.reza.plugins.RoutingKt.configureRouting
