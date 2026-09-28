@@ -2,7 +2,7 @@ package com.reza.routes
 
 import com.reza.models.*
 import com.reza.repository.AuthRepository
-import com.reza.security.JwtConfig
+import com.reza.security.JwtService
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -11,6 +11,7 @@ import org.koin.ktor.ext.inject
 
 fun Route.authRoutes() {
     val authRepository by inject<AuthRepository>()
+    val jwtService by inject<JwtService>()
 
     route("/auth") {
 
@@ -23,7 +24,7 @@ fun Route.authRoutes() {
             }
 
             authRepository.createUser(req)
-            val token = JwtConfig.generateToken(req.email)
+            val token = jwtService.generateToken(req.email)
             call.respond(HttpStatusCode.Created, AuthResponse(token, req.email))
         }
 
@@ -31,12 +32,12 @@ fun Route.authRoutes() {
             val req = call.receive<AuthRequest>()
             val user = authRepository.findUserByEmail(req.email)
 
-            if (user == null || !JwtConfig.verifyPassword(req.password, user.passwordHash)) {
+            if (user == null || !jwtService.verifyPassword(req.password, user.passwordHash)) {
                 call.respond(HttpStatusCode.Unauthorized, GenericResponse("Invalid credentials"))
                 return@post
             }
 
-            val token = JwtConfig.generateToken(req.email)
+            val token = jwtService.generateToken(req.email)
             call.respond(HttpStatusCode.OK, AuthResponse(token, req.email))
         }
 

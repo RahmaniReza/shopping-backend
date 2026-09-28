@@ -9,7 +9,12 @@ import com.reza.repository.ProductRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<AuthRepository> { ExposedAuthRepository() }
-    single<CatalogRepository> { ExposedCatalogRepository() }
-    single< ProductRepository> { ExposedProductRepository() }
+    single<AuthRepository> {
+        ExposedAuthRepository(
+            jwtService = get(),
+            dbFactory = get()
+        )
+    }
+    single<CatalogRepository> { ExposedCatalogRepository(dbFactory = get()) }
+    single<ProductRepository> { ExposedProductRepository(dbFactory = get()) }
 }

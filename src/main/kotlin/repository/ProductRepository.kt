@@ -2,15 +2,17 @@ package com.reza.repository
 
 import com.reza.db.ProductsTable
 import com.reza.models.ProductDto
-import com.reza.plugins.DatabaseFactory.dbQuery
+import com.reza.plugins.DatabaseFactory
 import org.jetbrains.exposed.sql.selectAll
 
 interface ProductRepository {
     suspend fun getProductsByCategory(categoryId: Int): List<ProductDto>
 }
 
-class ExposedProductRepository : ProductRepository {
-    override suspend fun getProductsByCategory(categoryId: Int): List<ProductDto> = dbQuery {
+class ExposedProductRepository(
+    private val dbFactory: DatabaseFactory
+) : ProductRepository {
+    override suspend fun getProductsByCategory(categoryId: Int): List<ProductDto> = dbFactory.dbQuery {
         ProductsTable.selectAll()
             .where { ProductsTable.categoryId eq categoryId }
             .map {

@@ -11,20 +11,23 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.ktor.ext.inject
 
-object DatabaseFactory {
+class DatabaseFactory(private val config: DatabaseConfig) {
+
     fun init() {
-        val config = HikariConfig().apply {
-            driverClassName = "org.postgresql.Driver"
-            jdbcUrl = "jdbc:postgresql://localhost:5432/shopping_db"
-            username = "postgres"
-            password = "your_password"
-            maximumPoolSize = 10
+        val hikariConfig = HikariConfig().apply {
+            driverClassName = config.driver
+            jdbcUrl = config.url
+            username = config.user
+            password = config.pass
+            maximumPoolSize = config.maxPoolSize
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
             validate()
         }
-        val dataSource = HikariDataSource(config)
+
+        val dataSource = HikariDataSource(hikariConfig)
         Database.connect(dataSource)
 
         transaction {
@@ -37,5 +40,14 @@ object DatabaseFactory {
 }
 
 fun Application.configureDatabase() {
-    DatabaseFactory.init()
+    val databaseFactory: DatabaseFactory by inject()
+    databaseFactory.init()
 }
+
+data class DatabaseConfig(
+    val driver: String,
+    val url: String,
+    val user: String,
+    val pass: String,
+    val maxPoolSize: Int = 10
+)
