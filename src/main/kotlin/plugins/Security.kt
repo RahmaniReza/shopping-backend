@@ -1,9 +1,11 @@
 package com.reza.plugins
 
 import com.reza.security.JwtService
+import io.ktor.http.parametersOf
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import org.koin.core.parameter.parametersOf
 import org.koin.ktor.ext.inject
 
 fun Application.configureSecurity() {
