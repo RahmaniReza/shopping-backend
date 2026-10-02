@@ -6,7 +6,8 @@ import io.ktor.server.application.ApplicationEnvironment
 import org.koin.dsl.module
 
 val securityModule = module {
-    single<JwtService> { (environment: ApplicationEnvironment) ->
+    single<JwtService> {
+        val environment: ApplicationEnvironment = get()
         val config = environment.config.config("jwt")
 
         JwtServiceImpl(
