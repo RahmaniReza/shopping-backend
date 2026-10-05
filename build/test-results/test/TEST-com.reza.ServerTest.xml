@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.reza.ServerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-21T04:48:46.932Z" hostname="Mohammadrezas-MacBook-Pro.local" time="0.54">
+<testsuite name="com.reza.ServerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T04:40:35.112Z" hostname="Mohammadrezas-MacBook-Pro.local" time="0.839">
   <properties/>
-  <testcase name="test root endpoint" classname="com.reza.ServerTest" time="0.538"/>
-  <system-out><![CDATA[2026-09-21 05:48:47.316 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
-2026-09-21 05:48:47.426 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Application started in 0.118 seconds.
-2026-09-21 05:48:47.427 [DefaultDispatcher-worker-3 @coroutine#5] INFO  io.ktor.test - Responding at http://localhost:80
-2026-09-21 05:48:47.427 [DefaultDispatcher-worker-3 @coroutine#5] INFO  io.ktor.test - Responding at https://localhost:443
+  <testcase name="test authenticated request logging and token verification" classname="com.reza.ServerTest" time="0.798"/>
+  <testcase name="test custom X-Request-ID is preserved and returned" classname="com.reza.ServerTest" time="0.007"/>
+  <testcase name="test not found route returns 404 and requestId" classname="com.reza.ServerTest" time="0.024"/>
+  <testcase name="test root endpoint returns OK and X-Request-ID header" classname="com.reza.ServerTest" time="0.007"/>
+  <system-out><![CDATA[2026-10-05 05:40:35.562 [DefaultDispatcher-worker-2 @call-context#3] ?[34mINFO ?[0;39m ?[36mio.ktor.test?[0;39m [id:-] - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-05 05:40:35.916 [DefaultDispatcher-worker-2 @call-context#15] ?[34mINFO ?[0;39m ?[36mio.ktor.test?[0;39m [id:-] - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-05 05:40:35.924 [DefaultDispatcher-worker-1 @call-context#27] ?[34mINFO ?[0;39m ?[36mio.ktor.test?[0;39m [id:-] - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-05 05:40:35.947 [DefaultDispatcher-worker-8 @call-context#39] ?[34mINFO ?[0;39m ?[36mio.ktor.test?[0;39m [id:-] - No ktor.deployment.watch patterns specified, automatic reload is not active.
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

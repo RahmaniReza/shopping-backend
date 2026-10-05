@@ -1,0 +1,38 @@
+### 1. Test Root Endpoint (Check server running and verify X-Request-ID in response)
+GET http://localhost:8080/
+
+### 2. Test Custom Request ID Header
+GET http://localhost:8080/
+X-Request-ID: test-custom-client-id-12345
+
+### 3. Test Health Check (Filtered out of noisy logs)
+GET http://localhost:8080/health
+
+### 4. Register a New User
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "Password123!"
+}
+
+### 5. Login (Returns JWT token)
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "Password123!"
+}
+
+### 6. Get Categories (Protected by JWT - Replace {{token}} with the token from login)
+GET http://localhost:8080/categories
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### 7. Get Products for Category
+GET http://localhost:8080/categories/1/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### 8. Test 404 Not Found Handling
+GET http://localhost:8080/api/unknown-endpoint
