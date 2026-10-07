@@ -14,6 +14,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
 
 class DatabaseFactory(private val config: DatabaseConfig) {
+    private var dataSource: HikariDataSource? = null
+    private var database: Database? = null
 
     fun init() {
         val hikariConfig = HikariConfig().apply {
@@ -23,20 +25,25 @@ class DatabaseFactory(private val config: DatabaseConfig) {
             password = config.pass
             maximumPoolSize = config.maxPoolSize
             isAutoCommit = false
-            transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+            transactionIsolation = config.transactionIsolation
             validate()
         }
 
-        val dataSource = HikariDataSource(hikariConfig)
-        Database.connect(dataSource)
+        val ds = HikariDataSource(hikariConfig)
+        dataSource = ds
+        database = Database.connect(ds)
 
-        transaction {
+        transaction(database!!) {
             SchemaUtils.create(UsersTable, CategoriesTable, ProductsTable)
         }
     }
 
+    fun close() {
+        dataSource?.close()
+    }
+
     suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+        newSuspendedTransaction(Dispatchers.IO, db = database) { block() }
 }
 
 fun Application.configureDatabase() {
@@ -49,5 +56,6 @@ data class DatabaseConfig(
     val url: String,
     val user: String,
     val pass: String,
-    val maxPoolSize: Int = 10
+    val maxPoolSize: Int = 10,
+    val transactionIsolation: String = "TRANSACTION_REPEATABLE_READ"
 )
