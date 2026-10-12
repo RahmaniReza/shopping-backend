@@ -20,4 +20,4 @@ databases:
     plan: free
     region: frankfurt
     databaseName: shopping_db
-    user: postgres
+    user: shopping_user
