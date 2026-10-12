@@ -17,6 +17,6 @@ jwt:
 
 database:
   driver: "${DB_DRIVER:org.postgresql.Driver}"
-  url: "${DB_URL:jdbc:postgresql://localhost:5432/shopping_db}"
+  url: "${DATABASE_URL:${DB_URL:jdbc:postgresql://localhost:5432/shopping_db}}"
   user: "${DB_USER:postgres}"
   password: "${DB_PASSWORD:your_password}"

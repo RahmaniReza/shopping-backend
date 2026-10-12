@@ -18,11 +18,34 @@ class DatabaseFactory(private val config: DatabaseConfig) {
     private var database: Database? = null
 
     fun init() {
+        var finalUrl = config.url
+        var finalUser = config.user
+        var finalPass = config.pass
+
+        if (finalUrl.startsWith("postgres://") || finalUrl.startsWith("postgresql://")) {
+            try {
+                val cleanUri = java.net.URI(finalUrl.replace("postgres://", "http://").replace("postgresql://", "http://"))
+                val userInfo = cleanUri.userInfo
+                if (!userInfo.isNullOrBlank() && userInfo.contains(":")) {
+                    val parts = userInfo.split(":", limit = 2)
+                    finalUser = parts[0]
+                    finalPass = parts[1]
+                }
+                val host = cleanUri.host
+                val port = if (cleanUri.port != -1) cleanUri.port else 5432
+                val path = cleanUri.path
+                val query = if (cleanUri.query != null) "?${cleanUri.query}" else ""
+                finalUrl = "jdbc:postgresql://$host:$port$path$query"
+            } catch (_: Exception) {
+                // Fall back to original URL
+            }
+        }
+
         val hikariConfig = HikariConfig().apply {
             driverClassName = config.driver
-            jdbcUrl = config.url
-            username = config.user
-            password = config.pass
+            jdbcUrl = finalUrl
+            username = finalUser
+            password = finalPass
             maximumPoolSize = config.maxPoolSize
             isAutoCommit = false
             transactionIsolation = config.transactionIsolation
