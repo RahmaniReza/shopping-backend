@@ -13,10 +13,10 @@ ktor:
 
 jwt:
   secret: "${JWT_SECRET:my-super-secret-local-dev-key-12345}"
-  issuer: "com.reza.shopping"
+  issuer: "${JWT_ISSUER:com.reza.shopping}"
 
 database:
   driver: "${DB_DRIVER:org.postgresql.Driver}"
-  url: "${DATABASE_URL:${DB_URL:jdbc:postgresql://localhost:5432/shopping_db}}"
+  url: "${DATABASE_URL:jdbc:postgresql://localhost:5432/shopping_db}"
   user: "${DB_USER:postgres}"
-  password: "${DB_PASSWORD:your_password}"
+  password: "${DB_PASSWORD:postgres_secure_password}"

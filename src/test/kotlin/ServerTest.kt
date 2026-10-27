@@ -16,6 +16,19 @@ import kotlin.test.*
 class ServerTest {
 
     @Test
+    fun `test application yaml configuration resolution`() {
+        val config = io.ktor.server.config.yaml.YamlConfig("application.yaml")
+        assertNotNull(config)
+        assertEquals("8080", config.property("ktor.deployment.port").getString())
+        assertEquals("my-super-secret-local-dev-key-12345", config.property("jwt.secret").getString())
+        assertEquals("com.reza.shopping", config.property("jwt.issuer").getString())
+        assertEquals("org.postgresql.Driver", config.property("database.driver").getString())
+        assertEquals("jdbc:postgresql://localhost:5432/shopping_db", config.property("database.url").getString())
+        assertEquals("postgres", config.property("database.user").getString())
+        assertEquals("postgres_secure_password", config.property("database.password").getString())
+    }
+
+    @Test
     fun `test root endpoint returns OK and X-Request-ID header`() = testApplication {
         application {
             configureLogging()
