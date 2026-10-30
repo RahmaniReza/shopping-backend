@@ -12,7 +12,7 @@ object UsersTable : IntIdTable("users") {
 }
 
 object CategoriesTable : IntIdTable("categories") {
-    val name = varchar("name", 100)
+    val name = varchar("name", 100).uniqueIndex()
     val imageUrl = varchar("image_url", 500)
 }
 

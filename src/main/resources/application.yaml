@@ -20,3 +20,4 @@ database:
   url: "${DATABASE_URL:jdbc:postgresql://localhost:5432/shopping_db}"
   user: "${DB_USER:postgres}"
   password: "${DB_PASSWORD:postgres_secure_password}"
+  autoSeed: "${DB_AUTO_SEED:true}"

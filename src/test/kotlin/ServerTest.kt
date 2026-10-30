@@ -26,6 +26,7 @@ class ServerTest {
         assertEquals("jdbc:postgresql://localhost:5432/shopping_db", config.property("database.url").getString())
         assertEquals("postgres", config.property("database.user").getString())
         assertEquals("postgres_secure_password", config.property("database.password").getString())
+        assertEquals("true", config.property("database.autoSeed").getString())
     }
 
     @Test

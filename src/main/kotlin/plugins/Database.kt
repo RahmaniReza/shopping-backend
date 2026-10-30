@@ -1,6 +1,7 @@
 package com.reza.plugins
 
 import com.reza.db.CategoriesTable
+import com.reza.db.DatabaseSeeder
 import com.reza.db.ProductsTable
 import com.reza.db.UsersTable
 import com.zaxxer.hikari.HikariConfig
@@ -13,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
 
-class DatabaseFactory(private val config: DatabaseConfig) {
+class DatabaseFactory(val config: DatabaseConfig) {
     private var dataSource: HikariDataSource? = null
     private var database: Database? = null
 
@@ -61,6 +62,11 @@ class DatabaseFactory(private val config: DatabaseConfig) {
         }
     }
 
+    fun <T> inTransaction(block: () -> T): T {
+        val db = database ?: error("Database has not been initialized. Call init() first.")
+        return transaction(db) { block() }
+    }
+
     fun close() {
         dataSource?.close()
     }
@@ -71,7 +77,13 @@ class DatabaseFactory(private val config: DatabaseConfig) {
 
 fun Application.configureDatabase() {
     val databaseFactory: DatabaseFactory by inject()
+    val databaseSeeder: DatabaseSeeder by inject()
+
     databaseFactory.init()
+
+    if (databaseFactory.config.autoSeed) {
+        databaseSeeder.seedCategories()
+    }
 }
 
 data class DatabaseConfig(
@@ -80,5 +92,6 @@ data class DatabaseConfig(
     val user: String,
     val pass: String,
     val maxPoolSize: Int = 10,
-    val transactionIsolation: String = "TRANSACTION_REPEATABLE_READ"
+    val transactionIsolation: String = "TRANSACTION_REPEATABLE_READ",
+    val autoSeed: Boolean = false
 )
