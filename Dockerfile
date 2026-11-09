@@ -1,10 +1,10 @@
 # Stage 1: Build the fat JAR
-FROM eclipse-temurin:21-jdk-alpine AS builder
+FROM eclipse-temurin:21-jdk-jammy AS builder
 
 WORKDIR /app
 
-# Install bash for the gradle wrapper
-RUN apk add --no-cache bash
+# Configure Gradle JVM options to prevent Out Of Memory (OOM) errors during build
+ENV GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC"
 
 # Copy Gradle files for dependency caching
 COPY gradlew settings.gradle.kts build.gradle.kts gradle.properties ./
@@ -13,11 +13,14 @@ COPY gradle ./gradle
 # Make gradlew executable
 RUN chmod +x ./gradlew
 
+# Pre-fetch Gradle dependencies to leverage Docker layer caching
+RUN ./gradlew dependencies --no-daemon --no-watch-fs || true
+
 # Copy source code
 COPY src ./src
 
 # Build the fat JAR
-RUN ./gradlew shadowJar --no-daemon
+RUN ./gradlew shadowJar --no-daemon --no-watch-fs --stacktrace
 
 # Stage 2: Runtime image
 FROM eclipse-temurin:21-jre-alpine
@@ -34,3 +37,4 @@ USER appuser
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
