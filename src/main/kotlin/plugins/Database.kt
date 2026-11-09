@@ -83,6 +83,7 @@ fun Application.configureDatabase() {
 
     if (databaseFactory.config.autoSeed) {
         databaseSeeder.seedCategories()
+        databaseSeeder.seedProducts()
     }
 }
 
